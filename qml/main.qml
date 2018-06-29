@@ -1,4 +1,4 @@
-import QtQuick 2.7			//ApplicationWindow
+import QtQuick 2.7		//ApplicationWindow
 import QtQuick.Controls 2.1	//Dialog
 
 ApplicationWindow {
@@ -6,14 +6,18 @@ ApplicationWindow {
 
 	visible: true
 	title: "Simple QML game"
-	minimumWidth: 320
-	minimumHeight: 270
+
+	property int con_X: 5
+	property int con_Y: 5
+
+	minimumWidth: 50 * con_X + 20
+	minimumHeight: 50 * con_Y + 10
 
 	function checkIfWin(pcc) {
-		for (var y = 0; y < 5; y++) {
+		for (var y = 0; y < con_Y; y++) {
 			var _pcc = pcc[y].children[0]
-			for (var x = 0; x < 5; x++) {
-				if (_pcc.children[x].contentItem.text == 'x') return
+			for (var x = 0; x < con_X; x++) {
+				if (_pcc.children[x].children[0].text == 'x') return
 			}
 		}
 		win_dialog.open()
@@ -22,16 +26,16 @@ ApplicationWindow {
 	function changeXO(orig_x, orig_y, parent){
 		var pc = parent.children
 
-		for (var x = 0; x < 5; x++) {
-			var pc_ci = pc[x].contentItem
+		for (var x = 0; x < con_X; x++) {
+			var pc_ci = pc[x].children[0]
 			pc_ci.text = pc_ci.text=='x' ? 'o' : 'x'
 			pc_ci.color = pc_ci.text=='x' ? "#ff0000" : "#008B00"
 		}
 
 		var pcc = parent.parent.parent.children
 
-		for (var y = 0; y < 5; y++) {
-			var pcc_ci = pcc[y].children[0].children[orig_x].contentItem
+		for (var y = 0; y < con_Y; y++) {
+			var pcc_ci = pcc[y].children[0].children[orig_x].children[0]
 			if (y != orig_y){
 				pcc_ci.text = pcc_ci.text=='x' ? 'o' : 'x'
 				pcc_ci.color = pcc_ci.text=='x' ? "#ff0000" : "#008B00"
@@ -43,7 +47,7 @@ ApplicationWindow {
 	}
 
 	Repeater{
-		model: 5
+		model: con_Y
 
 		Column {
 			x: 10
@@ -53,18 +57,20 @@ ApplicationWindow {
 				property int btnY: index
 
 				Repeater {
-					model: 5
+					model: con_X
 					property int btnY: parent.btnY
 
 					Button{
 					    property int btnX: index
 					    property int btnY: parent.btnY
-					    width: 60
+					    width: 50
 	        			height: 60
 
-						contentItem: Text {
-						        text: 'x'
-						        color: "#ff0000"
+						Text {
+            					anchors.centerIn: parent
+            					font.pixelSize: 25
+						        text: Math.round(Math.random()) ? 'x' : 'o'
+						        color: text=='x' ? "#ff0000" : "#008B00"
 						}
 
 					    onClicked: changeXO(btnX, btnY, parent)
