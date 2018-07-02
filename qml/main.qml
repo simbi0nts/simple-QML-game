@@ -7,8 +7,8 @@ ApplicationWindow {
 	visible: true
 	title: "Simple QML game"
 
-	property int con_X: 5
-	property int con_Y: 5
+	property int con_X: 6
+	property int con_Y: 6
 
 	minimumWidth: 50 * con_X + 20
 	minimumHeight: 50 * con_Y + 10
